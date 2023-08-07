@@ -1,5 +1,6 @@
 import _ from "lodash";
-import { useState } from "react";
+import { useRef } from "react";
+import { FaRegUserCircle } from "react-icons/fa";
 import "src/assets/styles/personalInformation.sass";
 import FileUpload from "./FileUpload";
 const PersonalInformation = (props) => {
@@ -17,13 +18,9 @@ const PersonalInformation = (props) => {
 			name: "Software Quality Engineer",
 		},
 	];
-	const [resume, setResume] = useState();
-
-	const handleFileChange = (e) => {
-		setResume(e.target.files[0]);
-	};
 
 	const { data, handleFormDataChange } = props;
+	const profilePicRef = useRef();
 
 	const onChange = (event) => {
 		const { type, value, name, files, checked } = event.target;
@@ -31,6 +28,8 @@ const PersonalInformation = (props) => {
 
 		if (name === "fileUpload") {
 			modifiedData["resume"] = files[0];
+		} else if (name === "profilePic") {
+			modifiedData["profilePic"] = files[0];
 		} else if (name === "sendJobUpdates") {
 			modifiedData[name] = checked;
 		} else if (type === "checkbox") {
@@ -43,6 +42,10 @@ const PersonalInformation = (props) => {
 		}
 
 		handleFormDataChange(modifiedData);
+	};
+
+	const handleUpload = () => {
+		profilePicRef.current.click();
 	};
 
 	return (
@@ -146,7 +149,30 @@ const PersonalInformation = (props) => {
 					<p>Send me job related updates via mail</p>
 				</div>
 			</section>
-			<section></section>
+			<section>
+				<div className="upload">
+					{data.profilePic ? (
+						<img
+							src={URL.createObjectURL(data.profilePic)}
+							alt=""
+							className="upload-preview"
+						/>
+					) : (
+						<FaRegUserCircle className="upload-placeholder" />
+					)}
+					<p className="upload-text" onClick={handleUpload}>
+						UPLOAD DISPLAY PICTURE
+					</p>
+					<small className="subText">Max. image size: 5 MB</small>
+					<input
+						type="file"
+						accept="image/png, image/jpeg"
+						name="profilePic"
+						ref={profilePicRef}
+						onChange={onChange}
+					/>
+				</div>
+			</section>
 		</form>
 	);
 };

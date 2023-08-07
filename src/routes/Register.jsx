@@ -39,6 +39,7 @@ const Register = () => {
 			preferredRoles: [],
 			referral: "",
 			sendJobUpdates: false,
+			profilePic: null,
 		},
 		qualifications: {},
 	});

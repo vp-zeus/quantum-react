@@ -1,3 +1,4 @@
+@import "colors"
 .personal-information
     margin-top: 2rem
     display: grid
@@ -7,3 +8,19 @@
 .role-input 
     display: flex
     flex-direction: column
+.upload
+    width: fit-content
+    margin-left: auto
+    text-align: center
+    &-placeholder
+        width: 10rem
+        height: 10rem
+    &-text
+        color: $darkGreen
+        cursor: pointer
+    &-preview
+        width: 10rem
+        height: 10rem
+        border-radius: 20rem
+    input
+        display: none
