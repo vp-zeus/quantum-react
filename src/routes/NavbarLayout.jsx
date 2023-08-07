@@ -6,9 +6,7 @@ const NavbarLayout = () => {
 	return (
 		<>
 			<Navbar />
-			<main className="walkIn-container">
-				<Outlet />
-			</main>
+			<Outlet />
 		</>
 	);
 };

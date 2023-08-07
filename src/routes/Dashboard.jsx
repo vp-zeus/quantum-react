@@ -14,11 +14,11 @@ const Dashboard = () => {
 		getData();
 	}, []);
 	return (
-		<>
+		<main className="walkIn-container">
 			{walkInData.map((walkIn) => (
 				<WalkIn walkIn={walkIn} key={walkIn.id} />
 			))}
-		</>
+		</main>
 	);
 };
 
