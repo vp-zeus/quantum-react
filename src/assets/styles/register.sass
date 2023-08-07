@@ -1,0 +1,74 @@
+@import "colors"
+.register-header
+    display: flex
+    justify-content: space-between
+    align-items: center
+    background-color: #3C4E62
+    padding: 0 1rem
+    &--icon
+        font-size: 2rem
+        color: $primaryGreen
+        cursor: pointer
+    &--text
+        color: #FFFFFF
+        font-weight: 400
+.btn-group
+    display: flex
+    gap: 1.5rem
+    justify-content: center
+.register-body
+    padding: 2rem
+    width: 80%
+    margin: auto
+.register-actions
+    margin: 1rem 0
+    & > .btn
+        margin: 0
+
+.progress
+    display: flex
+    justify-content: space-between
+    align-items: center
+    gap: 1rem
+    & .step
+        display: flex
+        align-items: center
+        gap: 0.25rem
+        cursor: pointer
+        &-marker
+            width: 1.75rem
+            height: 1.75rem
+            color: #FFFFFF
+            display: flex
+            align-items: center
+            justify-content: center
+            background-color: #757575
+            border-radius: 2rem
+            font-weight: 600
+            margin: 0
+        &-text
+            font-size: 1rem
+            font-weight: 600
+        .active
+            background-color: $primaryGreen
+            color: #333333
+    .separator
+        height: 2px
+        width: 50px
+        background-color: #B5C5D4
+        flex-grow: 1
+
+
+.input-title
+        font-size: 0.8rem
+        color: #666666
+        font-weight: 600
+.form-input
+    display: flex
+    gap: 0.5rem
+    margin-bottom: 1rem
+    flex-direction: column
+    input
+        border: none
+        outline: none
+        border-bottom: 1px solid #666666

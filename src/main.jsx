@@ -3,12 +3,13 @@ import ReactDOM from "react-dom/client";
 
 import NavbarLayout from "src/routes/NavbarLayout.jsx";
 import Dashboard from "src/routes/Dashboard";
-import Application from "./routes/Application";
+import Application from "src/routes/Application";
+import SubmittedApplication from "src/routes/SubmittedApplication";
+import Register from "src/routes/Register";
 import { walkInLoader } from "./api/walkIn";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./assets/styles/index.sass";
-import SubmittedApplication from "./routes/SubmittedApplication";
 
 const router = createBrowserRouter([
 	{
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
 			{
 				path: "/application/submit",
 				element: <SubmittedApplication />,
+			},
+			{
+				path: "/register",
+				element: <Register />,
 			},
 		],
 	},

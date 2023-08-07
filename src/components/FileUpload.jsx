@@ -19,7 +19,12 @@ const FileUpload = ({ file, handleFileChange }) => {
 						<p className="text">UPLOAD UPDATED RESUME</p>
 					</>
 				)}
-				<input type="file" ref={fileRef} onChange={handleFileChange} />
+				<input
+					type="file"
+					ref={fileRef}
+					onChange={handleFileChange}
+					name="fileUpload"
+				/>
 			</div>
 		</>
 	);
