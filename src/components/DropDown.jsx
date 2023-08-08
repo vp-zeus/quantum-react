@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import "src/assets/styles/dropdown.sass";
 const DropDown = (props) => {
-	const { heading, children, defaultOpen } = props;
+	const { heading, children, defaultOpen, styling } = props;
 
 	const [open, setOpen] = useState(!!defaultOpen);
 
@@ -22,7 +22,12 @@ const DropDown = (props) => {
 					/>
 				)}
 			</div>
-			{open && <div className="dropdown-content">{children}</div>}
+			{open &&
+				(styling === false ? (
+					<>{children}</>
+				) : (
+					<div className="dropdown-content">{children}</div>
+				))}
 			{/* <div className={`dropdown-content ${open && "hidden"}`}>
 				{children}
 			</div> */}
