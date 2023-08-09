@@ -31,10 +31,10 @@ const Register = () => {
 	const [activeStep, setActiveStep] = useState(0);
 	const [formData, setFormData] = useState({
 		personalInformation: {
-			firstName: "Vignesh",
-			lastName: "Pillutla",
-			email: "vigneshpillutla@gmail.com",
-			phone: "8828459033",
+			firstName: "",
+			lastName: "",
+			email: "",
+			phone: "",
 			resume: null,
 			portfolioURL: "",
 			preferredRoles: [],

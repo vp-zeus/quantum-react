@@ -58,11 +58,11 @@ const WalkInDetails = (props) => {
 				<hr />
 				<p className="subText">Select Your Preference : </p>
 				{roles.map((role) => (
-					<div key={role.roleId} className="option-selection">
+					<div key={role.id} className="option-selection">
 						<input
-							value={role.roleId}
+							value={role.id}
 							type="checkbox"
-							checked={rolePreferences.includes(role.roleId)}
+							checked={rolePreferences.includes(role.id)}
 							onChange={handleRoleChange}
 						/>
 						<p className="text">{role.name}</p>
@@ -72,7 +72,7 @@ const WalkInDetails = (props) => {
 				<FileUpload file={resume} handleFileChange={handleFileChange} />
 			</section>
 			{roles.map((role) => (
-				<div key={role.roleId} className="about-role">
+				<div key={role.id} className="about-role">
 					<DropDown heading={role.name}>
 						<p className="subText">Gross Compensation Package:</p>
 						<p className="text">{role.compensation}</p>
@@ -127,7 +127,7 @@ const WalkIn = (props) => {
 				<p>Job Roles :</p>
 				<ul>
 					{roles.map((role) => (
-						<li key={role.roleId}>
+						<li key={role.id}>
 							<img src={role.icon} alt="" />
 							{role.name}
 						</li>
