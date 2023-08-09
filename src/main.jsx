@@ -10,6 +10,7 @@ import { walkInLoader } from "./api/walkIn";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./assets/styles/index.sass";
+import Login from "./routes/Login";
 
 const router = createBrowserRouter([
 	{
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
 			{
 				path: "/register",
 				element: <Register />,
+			},
+			{
+				path: "/login",
+				element: <Login />,
 			},
 		],
 	},

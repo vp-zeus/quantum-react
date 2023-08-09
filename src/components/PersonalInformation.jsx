@@ -35,7 +35,7 @@ const PersonalInformation = (props) => {
 		} else if (type === "checkbox") {
 			modifiedData["preferredRoles"] = _.xor(
 				modifiedData["preferredRoles"],
-				[parseInt(value)]
+				[value]
 			);
 		} else {
 			modifiedData[name] = value;
@@ -120,8 +120,8 @@ const PersonalInformation = (props) => {
 					<div key={role.id} className="option-selection">
 						<input
 							type="checkbox"
-							value={role.id}
-							checked={data.preferredRoles.includes(role.id)}
+							value={role.name}
+							checked={data.preferredRoles.includes(role.name)}
 							onChange={onChange}
 						/>
 						<p>{role.name}</p>

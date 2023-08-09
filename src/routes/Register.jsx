@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { MdOutlineArrowBack } from "react-icons/md";
+import { Link } from "react-router-dom";
 import "src/assets/styles/register.sass";
 import FormProgress from "src/components/FormProgress";
 import PersonalInformation from "src/components/PersonalInformation";
@@ -30,10 +31,10 @@ const Register = () => {
 	const [activeStep, setActiveStep] = useState(0);
 	const [formData, setFormData] = useState({
 		personalInformation: {
-			firstName: "",
-			lastName: "",
-			email: "",
-			phone: "",
+			firstName: "Vignesh",
+			lastName: "Pillutla",
+			email: "vigneshpillutla@gmail.com",
+			phone: "8828459033",
 			resume: null,
 			portfolioURL: "",
 			preferredRoles: [],
@@ -79,22 +80,34 @@ const Register = () => {
 	return (
 		<>
 			<header className="register-header">
-				<MdOutlineArrowBack className="register-header--icon" />
+				<Link to="/login">
+					<MdOutlineArrowBack className="register-header--icon" />
+				</Link>
 				<h3 className="register-header--text">Create An Account</h3>
 				<div className="btn-group">
 					<button className="btn">CANCEL</button>
-					<button className="btn btn-disabled">CREATE</button>
+					<button
+						className={`btn ${
+							activeStep < totalSteps - 1 && "btn-disabled"
+						} `}
+					>
+						CREATE
+					</button>
 				</div>
 			</header>
 			<main className="register-body">
 				<FormProgress steps={steps} activeStep={activeStep} />
 
-				<ComponentToRender
-					data={formData[label]}
-					handleFormDataChange={(data) =>
-						handleFormDataChange(data, label)
-					}
-				/>
+				{activeStep < totalSteps - 1 ? (
+					<ComponentToRender
+						data={formData[label]}
+						handleFormDataChange={(data) =>
+							handleFormDataChange(data, label)
+						}
+					/>
+				) : (
+					<Review setActiveStep={setActiveStep} data={formData} />
+				)}
 
 				<div className="btn-group register-actions">
 					{activeStep > 0 && (
