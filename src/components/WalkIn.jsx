@@ -5,9 +5,19 @@ import { useState } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { FaLocationDot } from "react-icons/fa6";
+import InstructionalDesignerIcon from "src/assets/images/instructional-designer.png";
+import SoftwareEngineerIcon from "src/assets/images/software-engineer.png";
+import SoftwareQualityEngineerIcon from "src/assets/images/software-quality-engineer.png";
+import dayjs from "dayjs";
+
+const ROLE_ICONS = {
+	"Instructional Designer": InstructionalDesignerIcon,
+	"Software Engineer": SoftwareEngineerIcon,
+	"Software Quality Engineer": SoftwareQualityEngineerIcon,
+};
 const WalkInDetails = (props) => {
 	const { walkIn, applicationData, changeApplicationData } = props;
-	const { generalInstructions, instructions, minSysRequirements, roles } =
+	const { general_instructions, instructions, min_sys_requirements, roles } =
 		walkIn;
 	const { rolePreferences, resume } = applicationData;
 
@@ -32,7 +42,7 @@ const WalkInDetails = (props) => {
 			<DropDown heading="Pre-requisites & Application Process">
 				<div className="walkIn-instructions">
 					<p>General Instructions : </p>
-					<p>{generalInstructions}</p>
+					<p>{general_instructions}</p>
 				</div>
 				<hr />
 				<div className="walkIn-instructions">
@@ -42,7 +52,7 @@ const WalkInDetails = (props) => {
 				<hr />
 				<div className="walkIn-instructions">
 					<p>Minimum System Requirements : </p>
-					<p>{minSysRequirements}</p>
+					<p>{min_sys_requirements}</p>
 				</div>
 			</DropDown>
 			<section className="card slot-selection">
@@ -93,7 +103,7 @@ const WalkInDetails = (props) => {
 
 const WalkIn = (props) => {
 	const { walkIn, showAllDetails } = props;
-	const { name, startDate, endDate, location, roles, id } = walkIn;
+	const { name, start_date, end_date, venue, roles, id } = walkIn;
 
 	const [applicationData, setApplicationData] = useState({
 		timeSlotPreference: null,
@@ -121,19 +131,20 @@ const WalkIn = (props) => {
 				</div>
 				<p>Date & Time :</p>
 				<span className="walkIn-date">
-					{startDate} to {endDate}
+					{dayjs(start_date).format("DD-MMM-YYYY")} to{" "}
+					{dayjs(end_date).format("DD-MMM-YYYY")}
 				</span>
 				<span> | </span>
 				<span className="walkIn-location">
 					<FaLocationDot />
-					{location}
+					{venue.city}
 				</span>
 				<hr />
 				<p>Job Roles :</p>
 				<ul>
 					{roles.map((role) => (
 						<li key={role.id}>
-							<img src={role.icon} alt="" />
+							<img src={ROLE_ICONS[role.name]} alt="" />
 							{role.name}
 						</li>
 					))}

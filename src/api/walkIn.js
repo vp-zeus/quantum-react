@@ -3,8 +3,13 @@ import SoftwareEngineerIcon from "src/assets/images/software-engineer.png";
 import SoftwareQualityEngineerIcon from "src/assets/images/software-quality-engineer.png";
 import dayjs from "dayjs";
 import customParseformat from "dayjs/plugin/customParseFormat";
+import config from "src/config/config";
+import axios from "axios";
 
 dayjs.extend(customParseformat);
+
+const { API_ENDPOINT } = config;
+const WALK_IN_ENDPOINT = `${API_ENDPOINT}api/walkin/`;
 
 const data = [
 	{
@@ -154,11 +159,15 @@ const roles = [
 ];
 
 const getWalkins = async () => {
+	const response = await axios.get(WALK_IN_ENDPOINT);
+	const data = await response.data;
 	return data;
 };
 
 const getWalkInById = async (id) => {
-	return data.find((walkIn) => walkIn.id === id);
+	const response = await axios.get(`${WALK_IN_ENDPOINT}${id}`);
+	const data = await response.data;
+	return data;
 };
 
 // data loaders
