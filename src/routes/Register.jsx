@@ -50,7 +50,7 @@ const Register = () => {
 			college: "",
 			otherCollege: "",
 			collegeLocation: "",
-			applicantType: "",
+			applicantType: "Experienced",
 			yearsOfExp: "",
 			currentCTC: "",
 			expectedCTC: "",

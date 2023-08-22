@@ -62,7 +62,7 @@ const Review = (props) => {
 					<p className="subText">Phone Number</p>
 					<p className="text">{phone}</p>
 					<br />
-					<p className="text">{resume.name}</p>
+					<p className="text">{resume?.name}</p>
 					<br />
 					<p className="subText">Enter Portfolio URL (if any)</p>
 					<p className="text">{portfolioURL ? portfolioURL : "-"}</p>

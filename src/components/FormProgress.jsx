@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { FaPen } from "react-icons/fa";
 const FormProgress = (props) => {
 	const { steps, activeStep } = props;
 
@@ -10,10 +11,10 @@ const FormProgress = (props) => {
 						<div className="step">
 							<p
 								className={`step-marker ${
-									index === activeStep && "active"
+									index <= activeStep && "active"
 								}`}
 							>
-								{index + 1}
+								{index < activeStep ? <FaPen /> : index + 1}
 							</p>
 							<span className="step-text">{step.title}</span>
 						</div>

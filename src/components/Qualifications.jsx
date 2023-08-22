@@ -42,6 +42,7 @@ const Qualifications = (props) => {
 						value={data.yearOfPassing}
 						onChange={onChange}
 					>
+						<option value=""></option>
 						<option value="2021">2021</option>
 						<option value="2022">2022</option>
 						<option value="2023">2023</option>
@@ -150,67 +151,73 @@ const Qualifications = (props) => {
 					</div>
 				</div>
 				<div className="card exp">
-					<div className="form-input input-sm">
-						<p className="input-title">
-							Years of Experience <sup>*</sup>
-						</p>
-						<input
-							type="text"
-							name="yearsOfExp"
-							value={data.yearsOfExp}
-							onChange={onChange}
-						/>
-					</div>
-					<div className="form-input input-sm">
-						<p className="input-title">
-							Current CTC<sup>*</sup> (In Rupees)
-						</p>
-						<input
-							type="text"
-							name="currentCTC"
-							value={data.currentCTC}
-							onChange={onChange}
-						/>
-					</div>
-					<div className="form-input input-sm">
-						<p className="input-title">
-							Expected CTC<sup>*</sup> (In Rupees)
-						</p>
-						<input
-							type="text"
-							name="expectedCTC"
-							value={data.expectedCTC}
-							onChange={onChange}
-						/>
-					</div>
-					<p className="input-title">
-						Select All The Technologies You Expertise In
-						<sup>*</sup>
-					</p>
-					{skills.map((skill, index) => (
-						<div key={index} className="option-selection">
-							<input
-								type="checkbox"
-								name="expertiseTechnologies"
-								value={skill}
-								checked={data.expertiseTechnologies.includes(
-									skill
-								)}
-								onChange={onChange}
-							/>
-							<p>{skill}</p>
-						</div>
-					))}
+					{data.applicantType === "Experienced" && (
+						<>
+							<div className="form-input input-sm">
+								<p className="input-title">
+									Years of Experience <sup>*</sup>
+								</p>
+								<input
+									type="text"
+									name="yearsOfExp"
+									value={data.yearsOfExp}
+									onChange={onChange}
+								/>
+							</div>
+							<div className="form-input input-sm">
+								<p className="input-title">
+									Current CTC<sup>*</sup> (In Rupees)
+								</p>
+								<input
+									type="text"
+									name="currentCTC"
+									value={data.currentCTC}
+									onChange={onChange}
+								/>
+							</div>
+							<div className="form-input input-sm">
+								<p className="input-title">
+									Expected CTC<sup>*</sup> (In Rupees)
+								</p>
+								<input
+									type="text"
+									name="expectedCTC"
+									value={data.expectedCTC}
+									onChange={onChange}
+								/>
+							</div>
+							<p className="input-title">
+								Select All The Technologies You Expertise In
+								<sup>*</sup>
+							</p>
+							{skills.map((skill, index) => (
+								<div key={index} className="option-selection">
+									<input
+										type="checkbox"
+										name="expertiseTechnologies"
+										value={skill}
+										checked={data.expertiseTechnologies.includes(
+											skill
+										)}
+										onChange={onChange}
+									/>
+									<p>{skill}</p>
+								</div>
+							))}
 
-					<div className="form-input input-sm">
-						<p className="input-title">If others, please mention</p>
-						<input
-							type="text"
-							name="otherExpertiseTechnologies"
-							value={data.otherExpertiseTechnologies}
-							onChange={onChange}
-						/>
-					</div>
+							<div className="form-input input-sm">
+								<p className="input-title">
+									If others, please mention
+								</p>
+								<input
+									type="text"
+									name="otherExpertiseTechnologies"
+									value={data.otherExpertiseTechnologies}
+									onChange={onChange}
+								/>
+							</div>
+						</>
+					)}
 					<p className="input-title">
 						Select All The Technologies You Are Familiar In
 						<sup>*</sup>

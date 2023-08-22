@@ -4,11 +4,12 @@ import FileUpload from "./FileUpload";
 import { useState } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
+import { FaLocationDot } from "react-icons/fa6";
 const WalkInDetails = (props) => {
 	const { walkIn, applicationData, changeApplicationData } = props;
 	const { generalInstructions, instructions, minSysRequirements, roles } =
 		walkIn;
-	const { timeSlotPreference, rolePreferences, resume } = applicationData;
+	const { rolePreferences, resume } = applicationData;
 
 	const handleRoleChange = (e) => {
 		const { value } = e.target;
@@ -85,6 +86,7 @@ const WalkInDetails = (props) => {
 					</DropDown>
 				</div>
 			))}
+			<br />
 		</>
 	);
 };
@@ -122,7 +124,10 @@ const WalkIn = (props) => {
 					{startDate} to {endDate}
 				</span>
 				<span> | </span>
-				<span className="walkIn-location">{location}</span>
+				<span className="walkIn-location">
+					<FaLocationDot />
+					{location}
+				</span>
 				<hr />
 				<p>Job Roles :</p>
 				<ul>
