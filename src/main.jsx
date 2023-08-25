@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { ToastContainer } from "react-toastify";
 
 import NavbarLayout from "src/routes/NavbarLayout.jsx";
 import Dashboard from "src/routes/Dashboard";
@@ -11,6 +12,7 @@ import { walkInLoader } from "./api/walkIn";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./assets/styles/index.sass";
 import Login from "./routes/Login";
+import "react-toastify/dist/ReactToastify.css";
 
 const router = createBrowserRouter([
 	{
@@ -45,5 +47,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
 		<RouterProvider router={router} />
+		<ToastContainer />
 	</React.StrictMode>
 );

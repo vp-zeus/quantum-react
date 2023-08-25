@@ -2,6 +2,7 @@ import "src/assets/styles/login.sass";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { login } from "src/api/auth";
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [data, setData] = useState({
@@ -17,6 +18,9 @@ const Login = () => {
 			...prevData,
 			[name]: type === "checkbox" ? checked : value,
 		}));
+	};
+	const handleLogin = () => {
+		login(data);
 	};
 	return (
 		<>
@@ -63,7 +67,9 @@ const Login = () => {
 						/>
 						<p>Remember me</p>
 					</div>
-					<button className="btn">LOG IN</button>
+					<button className="btn" onClick={handleLogin}>
+						LOG IN
+					</button>
 					<small className="text">Not registered yet?</small>
 					<Link to="/register">
 						<small className="register-account">
