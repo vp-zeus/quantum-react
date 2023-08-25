@@ -159,9 +159,7 @@ const roles = [
 ];
 
 const getWalkins = async () => {
-	const response = await axios.get(WALK_IN_ENDPOINT, {
-		withCredentials: true,
-	});
+	const response = await axios.get(WALK_IN_ENDPOINT);
 	const data = await response.data;
 	return data;
 };

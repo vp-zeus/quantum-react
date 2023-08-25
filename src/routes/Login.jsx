@@ -1,8 +1,8 @@
 import "src/assets/styles/login.sass";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { login } from "src/api/auth";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "src/Providers/AuthProvider";
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [data, setData] = useState({
@@ -10,6 +10,8 @@ const Login = () => {
 		password: "",
 		rememberMe: false,
 	});
+	const { login, sessionData } = useAuth();
+	const navigate = useNavigate();
 
 	const handleFormChange = (e) => {
 		const { name, value, checked, type } = e.target;
@@ -22,6 +24,14 @@ const Login = () => {
 	const handleLogin = () => {
 		login(data);
 	};
+
+	useEffect(() => {
+		if (sessionData.isLoggedIn) {
+			navigate("/", {
+				replace: true,
+			});
+		}
+	}, [sessionData.isLoggedIn]);
 	return (
 		<>
 			<main className="login-container">
