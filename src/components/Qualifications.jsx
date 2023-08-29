@@ -1,18 +1,16 @@
 import DropDown from "./DropDown";
 import "src/assets/styles/qualifications.sass";
 import _ from "lodash";
+import { useLoaderData } from "react-router-dom";
 const Qualifications = (props) => {
-	const skills = ["Javascript", "Angular JS", "React", "Node JS", "Others"];
+	const { skills, colleges, degrees, streams } = useLoaderData();
 	const { data, handleFormDataChange } = props;
 	const onChange = (event) => {
 		const { value, name } = event.target;
 		const modifiedData = { ...data };
 
-		if (
-			name === "expertiseTechnologies" ||
-			name === "familiarTechnologies"
-		) {
-			modifiedData[name] = _.xor(modifiedData[name], [value]);
+		if (name === "expertSkills" || name === "familiarSkills") {
+			modifiedData[name] = _.xor(modifiedData[name], [parseInt(value)]);
 		} else {
 			modifiedData[name] = value;
 		}
@@ -51,17 +49,19 @@ const Qualifications = (props) => {
 				<div className="qualifications-grid">
 					<div className="form-input">
 						<p className="input-title">
-							Qualification <sup>*</sup>
+							Degree <sup>*</sup>
 						</p>
 						<select
-							name="qualification"
-							value={data.qualification}
+							name="degree"
+							value={data.degree}
 							onChange={onChange}
 						>
 							<option value=""></option>
-							<option value="Bachelor in Technology (B.Tech)">
-								Bachelor in Technology (B.Tech)
-							</option>
+							{degrees.map((degree) => (
+								<option key={degree.id} value={degree.id}>
+									{degree.name}
+								</option>
+							))}
 						</select>
 					</div>
 					<div className="form-input">
@@ -75,9 +75,11 @@ const Qualifications = (props) => {
 							id=""
 						>
 							<option value=""></option>
-							<option value="Information Technology">
-								Information Technology
-							</option>
+							{streams.map((stream) => (
+								<option key={stream.id} value={stream.id}>
+									{stream.name}
+								</option>
+							))}
 						</select>
 					</div>
 				</div>
@@ -92,9 +94,11 @@ const Qualifications = (props) => {
 							onChange={onChange}
 						>
 							<option value=""></option>
-							<option value="Pune Institute of Technology (PIT)">
-								Pune Institute of Technology (PIT)
-							</option>
+							{colleges.map((college) => (
+								<option key={college.id} value={college.id}>
+									{college.name}
+								</option>
+							))}
 						</select>
 					</div>
 					<div className="form-input">
@@ -190,18 +194,21 @@ const Qualifications = (props) => {
 								Select All The Technologies You Expertise In
 								<sup>*</sup>
 							</p>
-							{skills.map((skill, index) => (
-								<div key={index} className="option-selection">
+							{skills.map((skill) => (
+								<div
+									key={skill.id}
+									className="option-selection"
+								>
 									<input
 										type="checkbox"
-										name="expertiseTechnologies"
-										value={skill}
-										checked={data.expertiseTechnologies.includes(
-											skill
+										name="expertSkills"
+										value={skill.id}
+										checked={data.expertSkills.includes(
+											skill.id
 										)}
 										onChange={onChange}
 									/>
-									<p>{skill}</p>
+									<p>{skill.name}</p>
 								</div>
 							))}
 
@@ -222,18 +229,16 @@ const Qualifications = (props) => {
 						Select All The Technologies You Are Familiar In
 						<sup>*</sup>
 					</p>
-					{skills.map((skill, index) => (
-						<div key={index} className="option-selection">
+					{skills.map((skill) => (
+						<div key={skill.id} className="option-selection">
 							<input
 								type="checkbox"
-								name="familiarTechnologies"
-								value={skill}
-								checked={data.familiarTechnologies.includes(
-									skill
-								)}
+								name="familiarSkills"
+								value={skill.id}
+								checked={data.familiarSkills.includes(skill.id)}
 								onChange={onChange}
 							/>
-							<p>{skill}</p>
+							<p>{skill.name}</p>
 						</div>
 					))}
 					<div className="form-input input-sm">

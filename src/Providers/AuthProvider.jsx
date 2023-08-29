@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer } from "react";
 import { toast } from "react-toastify";
-import { loginAPI, profileAPI } from "src/api/auth";
+import { loginAPI, profileAPI, registerAPI } from "src/api/auth";
 const AuthContext = createContext();
 
 const initialState = {
@@ -57,6 +57,13 @@ const AuthProvider = ({ children }) => {
 		profile();
 	};
 
+	const register = async (formData) => {
+		dispatch({ type: "loading" });
+		const response = await registerAPI(formData);
+
+		return response;
+	};
+
 	const profile = async () => {
 		const response = await profileAPI();
 		dispatch({ type: "loading" });
@@ -78,6 +85,7 @@ const AuthProvider = ({ children }) => {
 		sessionData,
 		login,
 		profile,
+		register,
 	};
 	return (
 		<AuthContext.Provider value={value}>{children}</AuthContext.Provider>

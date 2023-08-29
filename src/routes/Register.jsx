@@ -6,6 +6,8 @@ import FormProgress from "src/components/FormProgress";
 import PersonalInformation from "src/components/PersonalInformation";
 import Qualifications from "src/components/Qualifications";
 import Review from "src/components/Review";
+import { useAuth } from "src/Providers/AuthProvider";
+import { useLoaderData } from "react-router-dom";
 
 const Register = () => {
 	const steps = [
@@ -28,40 +30,42 @@ const Register = () => {
 		},
 	];
 
+	const { register } = useAuth();
 	const [activeStep, setActiveStep] = useState(0);
 	const [formData, setFormData] = useState({
 		personalInformation: {
-			firstName: "",
-			lastName: "",
-			email: "",
-			phone: "",
+			firstName: "vignesh",
+			lastName: "pillutla",
+			email: "test@test.com",
+			password: "testing$1234",
+			phone: "8828459033",
 			resume: null,
 			portfolioURL: "",
-			preferredRoles: [],
+			preferredRoles: [2, 3],
 			referral: "",
-			sendJobUpdates: false,
+			mailList: true,
 			profilePic: null,
 		},
 		qualifications: {
-			aggregatePercentage: "",
-			yearOfPassing: "",
-			qualification: "",
-			stream: "",
-			college: "",
+			aggregatePercentage: "98",
+			yearOfPassing: "2023",
+			degree: "1",
+			stream: "1",
+			college: "1",
 			otherCollege: "",
 			collegeLocation: "",
-			applicantType: "Experienced",
+			applicantType: "Fresher",
 			yearsOfExp: "",
 			currentCTC: "",
 			expectedCTC: "",
-			expertiseTechnologies: [],
-			otherExpertiseTechnologies: "",
-			familiarTechnologies: [],
+			expertSkills: [],
+			familiarSkills: [2, 3],
+			otherExpertTechnologies: "",
 			otherFamiliarTechnologies: "",
 			onNoticePeriod: false,
 			noticePeriodEnd: "",
 			noticePeriodDuration: "",
-			alreadyAppeared: false,
+			appliedRecently: false,
 			pastRoleApplied: "",
 		},
 	});
@@ -71,6 +75,11 @@ const Register = () => {
 			...prevFormData,
 			[label]: data,
 		}));
+	};
+
+	const handleFormSubmit = async () => {
+		const response = await register(formData);
+		console.log(response);
 	};
 
 	const totalSteps = steps.length;
@@ -90,6 +99,7 @@ const Register = () => {
 						className={`btn ${
 							activeStep < totalSteps - 1 && "btn-disabled"
 						} `}
+						onClick={handleFormSubmit}
 					>
 						CREATE
 					</button>

@@ -2,25 +2,27 @@ import _ from "lodash";
 import { useRef } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import "src/assets/styles/personalInformation.sass";
+import { useLoaderData } from "react-router-dom";
 import FileUpload from "./FileUpload";
 const PersonalInformation = (props) => {
-	const roles = [
-		{
-			id: 1,
-			name: "Instructional Designer",
-		},
-		{
-			id: 2,
-			name: "Software Engineer",
-		},
-		{
-			id: 3,
-			name: "Software Quality Engineer",
-		},
-	];
+	// const roles = [
+	// 	{
+	// 		id: 1,
+	// 		name: "Instructional Designer",
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		name: "Software Engineer",
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		name: "Software Quality Engineer",
+	// 	},
+	// ];
 
 	const { data, handleFormDataChange } = props;
 	const profilePicRef = useRef();
+	const { roles } = useLoaderData();
 
 	const onChange = (event) => {
 		const { type, value, name, files, checked } = event.target;
@@ -30,12 +32,12 @@ const PersonalInformation = (props) => {
 			modifiedData["resume"] = files[0];
 		} else if (name === "profilePic") {
 			modifiedData["profilePic"] = files[0];
-		} else if (name === "sendJobUpdates") {
+		} else if (name === "mailList") {
 			modifiedData[name] = checked;
 		} else if (type === "checkbox") {
 			modifiedData["preferredRoles"] = _.xor(
 				modifiedData["preferredRoles"],
-				[value]
+				[parseInt(value)]
 			);
 		} else {
 			modifiedData[name] = value;
@@ -87,6 +89,18 @@ const PersonalInformation = (props) => {
 						onChange={onChange}
 					/>
 				</div>
+				<div className="form-input">
+					<p className="input-title">
+						Password <sup>*</sup>
+					</p>
+					<input
+						type="text"
+						placeholder="Password"
+						name="password"
+						value={data.password}
+						onChange={onChange}
+					/>
+				</div>
 				<div className="form-input phone">
 					<p className="input-title">
 						Phone Number <sup>*</sup>
@@ -120,8 +134,8 @@ const PersonalInformation = (props) => {
 					<div key={role.id} className="option-selection">
 						<input
 							type="checkbox"
-							value={role.name}
-							checked={data.preferredRoles.includes(role.name)}
+							value={role.id}
+							checked={data.preferredRoles.includes(role.id)}
 							onChange={onChange}
 						/>
 						<p>{role.name}</p>
@@ -142,8 +156,8 @@ const PersonalInformation = (props) => {
 				<div className="option-selection">
 					<input
 						type="checkbox"
-						checked={data.sendJobUpdates}
-						name="sendJobUpdates"
+						checked={data.mailList}
+						name="mailList"
 						onChange={onChange}
 					/>
 					<p>Send me job related updates via mail</p>

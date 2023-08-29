@@ -42,7 +42,11 @@ const refreshToken = async () => {
 		window.location.href = "/login";
 		return;
 	}
-	const response = await callPost("api/token/refresh", { refresh });
+	const response = await callPost(
+		"api/token/refresh",
+		{ refresh },
+		{ validateStatus: false }
+	);
 
 	if (!response.success) {
 		window.location.href = "/login";

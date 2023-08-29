@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import customParseformat from "dayjs/plugin/customParseFormat";
 import config from "src/config/config";
 import axios from "axios";
+import { callGet } from "./utils";
 
 dayjs.extend(customParseformat);
 
@@ -170,12 +171,66 @@ const getWalkInById = async (id) => {
 	return data;
 };
 
+const getRoles = async () => {
+	const response = await callGet("api/role");
+
+	if (!response.success) return Promise.reject(response.error);
+
+	return response.data;
+};
+
+const getDegrees = async () => {
+	const response = await callGet("api/degree");
+	if (!response.success) return Promise.reject(response.error);
+
+	return response.data;
+};
+
+const getStreams = async () => {
+	const response = await callGet("api/stream");
+	if (!response.success) return Promise.reject(response.error);
+
+	return response.data;
+};
+
+const getColleges = async () => {
+	const response = await callGet("api/college");
+	if (!response.success) return Promise.reject(response.error);
+
+	return response.data;
+};
+
+const getSkills = async () => {
+	const response = await callGet("api/skill");
+	if (!response.success) return Promise.reject(response.error);
+
+	return response.data;
+};
+
 // data loaders
 
 // Loader for application page
 export const walkInLoader = async ({ params }) => {
 	const walkInData = await getWalkInById(parseInt(params.id));
 	return walkInData;
+};
+
+export const registerLoader = async () => {
+	const data = await Promise.all([
+		getRoles(),
+		getDegrees(),
+		getStreams(),
+		getColleges(),
+		getSkills(),
+	]);
+
+	return {
+		roles: data[0],
+		degrees: data[1],
+		streams: data[2],
+		colleges: data[3],
+		skills: data[4],
+	};
 };
 
 export { getWalkins, getWalkInById };

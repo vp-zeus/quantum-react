@@ -1,9 +1,12 @@
+import _ from "lodash";
 import { FaPen } from "react-icons/fa";
 import "src/assets/styles/review.sass";
+import { useLoaderData } from "react-router-dom";
 
 const Review = (props) => {
 	const { setActiveStep } = props;
 	const { personalInformation, qualifications } = props.data;
+	const { roles, degrees, skills, streams, colleges } = useLoaderData();
 	const {
 		firstName,
 		lastName,
@@ -13,14 +16,14 @@ const Review = (props) => {
 		portfolioURL,
 		preferredRoles,
 		referral,
-		sendJobUpdates,
+		mailList,
 		profilePic,
 	} = personalInformation;
 
 	const {
 		aggregatePercentage,
 		yearOfPassing,
-		qualification,
+		degree,
 		stream,
 		college,
 		otherCollege,
@@ -29,14 +32,14 @@ const Review = (props) => {
 		yearsOfExp,
 		currentCTC,
 		expectedCTC,
-		expertiseTechnologies,
-		familiarTechnologies,
+		expertSkills,
+		familiarSkills,
 		otherExpertiseTechnologies,
 		otherFamiliarTechnologies,
 		onNoticePeriod,
 		noticePeriodEnd,
 		noticePeriodDuration,
-		alreadyAppeared,
+		appliedRecentl,
 		pastRoleApplied,
 	} = qualifications;
 	return (
@@ -68,9 +71,11 @@ const Review = (props) => {
 					<p className="text">{portfolioURL ? portfolioURL : "-"}</p>
 					<br />
 					<p className="subText">Preferred Job Roles</p>
-					{preferredRoles.map((role, index) => (
-						<p className="text" key={index}>
-							{role}
+					{_.filter(roles, (role) =>
+						preferredRoles.includes(role.id)
+					).map((role) => (
+						<p key={role.id} className="text">
+							{role.name}
 						</p>
 					))}
 					<br />
@@ -81,11 +86,7 @@ const Review = (props) => {
 					<p className="text">{referral ? referral : "-"}</p>
 					<br />
 					<div className="option-selection">
-						<input
-							type="checkbox"
-							checked={sendJobUpdates}
-							readOnly
-						/>
+						<input type="checkbox" checked={mailList} readOnly />
 						<p>Send me job related updates via mail</p>
 					</div>
 				</section>
@@ -118,18 +119,24 @@ const Review = (props) => {
 				<div className="qualification-grid">
 					<div>
 						<p className="subText">Qualification</p>
-						<p className="text">{qualification}</p>
+						<p className="text">
+							{_.find(degrees, (o) => o.id == degree).name}
+						</p>
 					</div>
 					<div>
 						<p className="subText">Stream</p>
-						<p className="text">{stream}</p>
+						<p className="text">
+							{_.find(streams, (o) => o.id == stream).name}
+						</p>
 					</div>
 				</div>
 				<br />
 				<div className="qualification-grid">
 					<div>
 						<p className="subText">College</p>
-						<p className="text">{college}</p>
+						<p className="text">
+							{_.find(colleges, (o) => o.id == college).name}
+						</p>
 					</div>
 					<div>
 						<p className="subText">
@@ -166,9 +173,11 @@ const Review = (props) => {
 				<p className="subText">
 					Select All The Technologies You Expertise In
 				</p>
-				{expertiseTechnologies.map((tech, index) => (
-					<p className="text" key={index}>
-						{tech}
+				{_.filter(skills, (skill) =>
+					expertSkills.includes(skill.id)
+				).map((skill) => (
+					<p key={skill.id} className="text">
+						{skill.name}
 					</p>
 				))}
 				<p className="subText">If others, please mention</p>
@@ -182,9 +191,11 @@ const Review = (props) => {
 				<p className="subText">
 					Select All The Technologies You are familiar In
 				</p>
-				{familiarTechnologies.map((tech, index) => (
-					<p className="text" key={index}>
-						{tech}
+				{_.filter(skills, (skill) =>
+					familiarSkills.includes(skill.id)
+				).map((skill) => (
+					<p key={skill.id} className="text">
+						{skill.name}
 					</p>
 				))}
 				<p className="subText">If others, please mention</p>
@@ -220,7 +231,7 @@ const Review = (props) => {
 					Have You Appeared For Any Test By Zeus in the past 12
 					months?
 				</p>
-				<p className="text">{alreadyAppeared ? "Yes" : "No"}</p>
+				<p className="text">{appliedRecentl ? "Yes" : "No"}</p>
 
 				<p className="subText">If Yes, which role did you apply for?</p>
 				<p className="text">
