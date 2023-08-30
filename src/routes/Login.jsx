@@ -27,9 +27,9 @@ const Login = () => {
 
 	useEffect(() => {
 		if (sessionData.isLoggedIn) {
-			navigate("/", {
-				replace: true,
-			});
+			// navigate("/", {
+			// 	replace: true,
+			// });
 		}
 	}, [sessionData.isLoggedIn]);
 	return (

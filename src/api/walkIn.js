@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import customParseformat from "dayjs/plugin/customParseFormat";
 import config from "src/config/config";
 import axios from "axios";
-import { callGet } from "./utils";
+import { callGet, callPost } from "./utils";
 
 dayjs.extend(customParseformat);
 
@@ -207,6 +207,23 @@ const getSkills = async () => {
 	return response.data;
 };
 
+const apply = async (data) => {
+	const formData = new FormData();
+	formData.append("preferred_time_slot", data.timeSlotPreference);
+	formData.append("walk_in", data.walkIn);
+	formData.append("preferred_roles", data.rolePreferences);
+	formData.append("applicant_resume", data.resume);
+
+	const response = await callPost("api/walkin/application", formData, {
+		headers: {
+			"content-type": "multipart/form-data",
+		},
+		withCredentials: true,
+	});
+
+	return response;
+};
+
 // data loaders
 
 // Loader for application page
@@ -233,4 +250,4 @@ export const registerLoader = async () => {
 	};
 };
 
-export { getWalkins, getWalkInById };
+export { getWalkins, getWalkInById, apply };

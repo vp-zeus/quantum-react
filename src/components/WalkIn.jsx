@@ -9,6 +9,7 @@ import InstructionalDesignerIcon from "src/assets/images/instructional-designer.
 import SoftwareEngineerIcon from "src/assets/images/software-engineer.png";
 import SoftwareQualityEngineerIcon from "src/assets/images/software-quality-engineer.png";
 import dayjs from "dayjs";
+import { apply } from "src/api/walkIn";
 
 const ROLE_ICONS = {
 	"Instructional Designer": InstructionalDesignerIcon,
@@ -17,8 +18,13 @@ const ROLE_ICONS = {
 };
 const WalkInDetails = (props) => {
 	const { walkIn, applicationData, changeApplicationData } = props;
-	const { general_instructions, instructions, min_sys_requirements, roles } =
-		walkIn;
+	const {
+		general_instructions,
+		instructions,
+		min_sys_requirements,
+		roles,
+		available_time_slots,
+	} = walkIn;
 	const { rolePreferences, resume } = applicationData;
 
 	const handleRoleChange = (e) => {
@@ -26,6 +32,14 @@ const WalkInDetails = (props) => {
 
 		changeApplicationData({
 			rolePreferences: _.xor([...rolePreferences], [parseInt(value)]),
+		});
+	};
+
+	const handleSlotChange = (e) => {
+		const { value } = e.target;
+
+		changeApplicationData({
+			timeSlotPreference: value,
 		});
 	};
 
@@ -58,14 +72,25 @@ const WalkInDetails = (props) => {
 			<section className="card slot-selection">
 				<p className="text">Time Slots & Preferences</p>
 				<p className="subText">Select a Time Slot :</p>
-				<div className="option-selection">
-					<input type="radio" name="slot-selection" />
-					<p className="text">9:00 AM to 11:00 AM</p>
-				</div>
-				<div className="option-selection">
-					<input type="radio" name="slot-selection" />
-					<p className="text">1:00 PM to 3:00 PM</p>
-				</div>
+				{available_time_slots.map((slot) => (
+					<div className="option-selection" key={slot.id}>
+						<input
+							type="radio"
+							name="slot-selection"
+							onChange={handleSlotChange}
+							value={slot.id}
+						/>
+						<p className="text">
+							{dayjs(slot.slot_start_time, "HH:mm:ss").format(
+								"hh:mm A"
+							)}{" "}
+							to{" "}
+							{dayjs(slot.slot_end_time, "HH:mm:ss").format(
+								"hh:mm A"
+							)}
+						</p>
+					</div>
+				))}
 				<hr />
 				<p className="subText">Select Your Preference : </p>
 				{roles.map((role) => (
@@ -118,15 +143,20 @@ const WalkIn = (props) => {
 		}));
 	};
 
+	const handleApply = async () => {
+		const data = await apply({ ...applicationData, walkIn: id });
+		console.log(data);
+	};
+
 	return (
 		<>
 			<div className="walkIn">
 				<div className="walkIn-header">
 					<h2>{name}</h2>
 					{showAllDetails && (
-						<Link to="/application/submit">
-							<button>APPLY</button>
-						</Link>
+						<button onClick={handleApply}>APPLY</button>
+						// <Link to="/application/submit">
+						// </Link>
 					)}
 				</div>
 				<p>Date & Time :</p>

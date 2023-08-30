@@ -13,7 +13,6 @@ axios.interceptors.request.use((req) => {
 		if (!access) {
 			controller.abort();
 			localStorage.removeItem("refresh");
-			window.location.href = "/login";
 		} else {
 			req.headers["Authorization"] = `Bearer ${access}`;
 		}
@@ -25,17 +24,21 @@ axios.interceptors.request.use((req) => {
 axios.interceptors.response.use(
 	(res) => res,
 	async (error) => {
-		const res = error.response;
+		const { config, response } = error;
+		console.log(error);
+		const res = response;
 		const data = res.data;
+
 		if (res.status === 401 && data.code === "token_not_valid") {
-			refreshToken();
+			config.withCredentials = true;
+			refreshToken(config);
 		}
 
-		return res;
+		return Promise.reject(res);
 	}
 );
 
-const refreshToken = async () => {
+const refreshToken = async (config) => {
 	const refresh = localStorage.getItem("refresh");
 
 	if (refresh === null) {
@@ -57,13 +60,15 @@ const refreshToken = async () => {
 
 	const { access } = response.data;
 	localStorage.setItem("access", access);
+
+	// Retry the req once
+	axios(config);
 };
 
 const callGet = async (url, config) => {
 	try {
 		const response = await axios.get(url, config);
 		const data = await response.data;
-
 		return {
 			success: true,
 			data,
@@ -80,6 +85,7 @@ const callGet = async (url, config) => {
 const callPost = async (url, body, config = {}) => {
 	try {
 		const response = await axios.post(url, body, config);
+		console.log(response);
 		const data = await response.data;
 		return {
 			success: true,

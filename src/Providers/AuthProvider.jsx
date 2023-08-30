@@ -70,7 +70,6 @@ const AuthProvider = ({ children }) => {
 
 		if (!response.success) {
 			dispatch({ type: "failure" });
-			toast.error(response.toastMsg);
 			return;
 		}
 
