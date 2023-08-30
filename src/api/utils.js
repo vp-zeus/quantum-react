@@ -3,6 +3,7 @@ import config from "src/config/config";
 
 const { API_ENDPOINT } = config;
 axios.defaults.baseURL = API_ENDPOINT;
+const REFRESH_ENDPOINT = "api/token/refresh";
 
 // Interceptor to add token to protected requests
 axios.interceptors.request.use((req) => {
@@ -25,16 +26,18 @@ axios.interceptors.response.use(
 	(res) => res,
 	async (error) => {
 		const { config, response } = error;
-		console.log(error);
-		const res = response;
-		const data = res.data;
 
-		if (res.status === 401 && data.code === "token_not_valid") {
-			config.withCredentials = true;
-			refreshToken(config);
+		if (!config.retried && config.url !== REFRESH_ENDPOINT) {
+			const data = response.data;
+
+			if (response.status === 401 && data.code === "token_not_valid") {
+				config.withCredentials = true;
+				const response = await refreshToken(config);
+				if (response) return response;
+			}
 		}
 
-		return Promise.reject(res);
+		return Promise.reject(error);
 	}
 );
 
@@ -42,17 +45,11 @@ const refreshToken = async (config) => {
 	const refresh = localStorage.getItem("refresh");
 
 	if (refresh === null) {
-		window.location.href = "/login";
 		return;
 	}
-	const response = await callPost(
-		"api/token/refresh",
-		{ refresh },
-		{ validateStatus: false }
-	);
+	const response = await callPost(REFRESH_ENDPOINT, { refresh });
 
 	if (!response.success) {
-		window.location.href = "/login";
 		localStorage.removeItem("refresh");
 		localStorage.removeItem("access");
 		return;
@@ -62,7 +59,7 @@ const refreshToken = async (config) => {
 	localStorage.setItem("access", access);
 
 	// Retry the req once
-	axios(config);
+	return axios({ ...config, retried: true });
 };
 
 const callGet = async (url, config) => {
@@ -85,7 +82,6 @@ const callGet = async (url, config) => {
 const callPost = async (url, body, config = {}) => {
 	try {
 		const response = await axios.post(url, body, config);
-		console.log(response);
 		const data = await response.data;
 		return {
 			success: true,

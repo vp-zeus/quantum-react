@@ -211,7 +211,8 @@ const apply = async (data) => {
 	const formData = new FormData();
 	formData.append("preferred_time_slot", data.timeSlotPreference);
 	formData.append("walk_in", data.walkIn);
-	formData.append("preferred_roles", data.rolePreferences);
+	formData.append("preferred_roles", JSON.stringify(data.rolePreferences));
+
 	formData.append("applicant_resume", data.resume);
 
 	const response = await callPost("api/walkin/application", formData, {
@@ -224,12 +225,26 @@ const apply = async (data) => {
 	return response;
 };
 
+const getApplicationById = async (id) => {
+	const response = await callGet(`/api/walkin/application/${id}`, {
+		withCredentials: true,
+	});
+
+	return response.data;
+};
+
 // data loaders
 
 // Loader for application page
 export const walkInLoader = async ({ params }) => {
 	const walkInData = await getWalkInById(parseInt(params.id));
 	return walkInData;
+};
+
+export const applicationLoader = async ({ params }) => {
+	const application = await getApplicationById(parseInt(params.id));
+
+	return application;
 };
 
 export const registerLoader = async () => {

@@ -3,6 +3,8 @@ import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "src/Providers/AuthProvider";
+import ReactLoading from "react-loading";
+
 const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [data, setData] = useState({
@@ -10,7 +12,10 @@ const Login = () => {
 		password: "",
 		rememberMe: false,
 	});
-	const { login, sessionData } = useAuth();
+	const {
+		login,
+		sessionData: { isLoggedIn, loading },
+	} = useAuth();
 	const navigate = useNavigate();
 
 	const handleFormChange = (e) => {
@@ -26,12 +31,15 @@ const Login = () => {
 	};
 
 	useEffect(() => {
-		if (sessionData.isLoggedIn) {
-			// navigate("/", {
-			// 	replace: true,
-			// });
+		if (isLoggedIn && !loading) {
+			navigate("/");
 		}
-	}, [sessionData.isLoggedIn]);
+	}, [isLoggedIn, loading]);
+
+	if (loading) {
+		return <ReactLoading type="spin" />;
+	}
+
 	return (
 		<>
 			<main className="login-container">

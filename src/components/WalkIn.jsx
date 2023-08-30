@@ -10,6 +10,7 @@ import SoftwareEngineerIcon from "src/assets/images/software-engineer.png";
 import SoftwareQualityEngineerIcon from "src/assets/images/software-quality-engineer.png";
 import dayjs from "dayjs";
 import { apply } from "src/api/walkIn";
+import { useNavigate } from "react-router-dom";
 
 const ROLE_ICONS = {
 	"Instructional Designer": InstructionalDesignerIcon,
@@ -129,6 +130,7 @@ const WalkInDetails = (props) => {
 const WalkIn = (props) => {
 	const { walkIn, showAllDetails } = props;
 	const { name, start_date, end_date, venue, roles, id } = walkIn;
+	const navigate = useNavigate();
 
 	const [applicationData, setApplicationData] = useState({
 		timeSlotPreference: null,
@@ -144,8 +146,10 @@ const WalkIn = (props) => {
 	};
 
 	const handleApply = async () => {
-		const data = await apply({ ...applicationData, walkIn: id });
-		console.log(data);
+		const response = await apply({ ...applicationData, walkIn: id });
+		if (response.success) {
+			navigate(`/walkin/application/${response.data.id}`);
+		}
 	};
 
 	return (

@@ -5,7 +5,7 @@ import Dashboard from "src/routes/Dashboard";
 import Application from "src/routes/Application";
 import SubmittedApplication from "src/routes/SubmittedApplication";
 import Register from "src/routes/Register";
-import { registerLoader, walkInLoader } from "./api/walkIn";
+import { applicationLoader, registerLoader, walkInLoader } from "./api/walkIn";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./assets/styles/index.sass";
@@ -13,6 +13,7 @@ import Login from "./routes/Login";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./Providers/AuthProvider";
 import App from "./App";
+import PrivateComponent from "./components/PrivateComponent";
 
 const router = createBrowserRouter([
 	{
@@ -25,7 +26,11 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/walkin/:id",
-				element: <Application />,
+				element: (
+					<PrivateComponent>
+						<Application />
+					</PrivateComponent>
+				),
 				loader: walkInLoader,
 			},
 			{
@@ -36,6 +41,15 @@ const router = createBrowserRouter([
 				path: "/register",
 				element: <Register />,
 				loader: registerLoader,
+			},
+			{
+				path: "/walkin/application/:id",
+				element: (
+					<SubmittedApplication />
+					// <PrivateComponent>
+					// </PrivateComponent>
+				),
+				loader: applicationLoader,
 			},
 		],
 	},
