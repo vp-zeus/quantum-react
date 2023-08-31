@@ -4,126 +4,105 @@ import { FaRegUserCircle } from "react-icons/fa";
 import "src/assets/styles/personalInformation.sass";
 import { useLoaderData } from "react-router-dom";
 import FileUpload from "./FileUpload";
-const PersonalInformation = (props) => {
-	// const roles = [
-	// 	{
-	// 		id: 1,
-	// 		name: "Instructional Designer",
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		name: "Software Engineer",
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		name: "Software Quality Engineer",
-	// 	},
-	// ];
-
-	const { data, handleFormDataChange } = props;
+import { ErrorMessage, Field, Form, useFormikContext } from "formik";
+import CustomErrorMessage from "src/components/CustomFormError";
+import RequiredField from "src/components/RequiredField";
+const PersonalInformation = () => {
+	const { setFieldValue, values } = useFormikContext();
 	const profilePicRef = useRef();
 	const { roles } = useLoaderData();
 
-	const onChange = (event) => {
-		const { type, value, name, files, checked } = event.target;
-		const modifiedData = { ...data };
+	const dataLabel = (key) => `personalInformation.${key}`;
 
-		if (name === "fileUpload") {
-			modifiedData["resume"] = files[0];
+	const onChange = async (event) => {
+		const { name, files } = event.target;
+
+		if (name == "fileUpload") {
+			setFieldValue(dataLabel("resume"), files[0]);
 		} else if (name === "profilePic") {
-			modifiedData["profilePic"] = files[0];
-		} else if (name === "mailList") {
-			modifiedData[name] = checked;
-		} else if (type === "checkbox") {
-			modifiedData["preferredRoles"] = _.xor(
-				modifiedData["preferredRoles"],
-				[parseInt(value)]
-			);
-		} else {
-			modifiedData[name] = value;
+			setFieldValue(dataLabel("profilePic"), files[0]);
 		}
-
-		handleFormDataChange(modifiedData);
 	};
 
 	const handleUpload = () => {
 		profilePicRef.current.click();
 	};
 
+	const profilePic = _.get(values, dataLabel("profilePic"));
 	return (
-		<form className="card personal-information">
+		<Form className="card personal-information">
 			<section>
 				<div className="form-input">
 					<p className="input-title">
 						First name <sup>*</sup>
 					</p>
-					<input
+					<RequiredField
+						name={dataLabel("firstName")}
 						type="text"
-						placeholder="First Name"
-						name="firstName"
-						value={data.firstName}
-						onChange={onChange}
+						inputProps={{
+							placeholder: "First Name*",
+						}}
 					/>
 				</div>
 				<div className="form-input">
 					<p className="input-title">
 						Last name <sup>*</sup>
 					</p>
-					<input
+					<RequiredField
+						name={dataLabel("lastName")}
 						type="text"
-						placeholder="Last Name"
-						name="lastName"
-						value={data.lastName}
-						onChange={onChange}
+						inputProps={{
+							placeholder: "Last Name*",
+						}}
 					/>
 				</div>
 				<div className="form-input">
 					<p className="input-title">
 						Email <sup>*</sup>
 					</p>
-					<input
+					<RequiredField
+						name={dataLabel("email")}
 						type="email"
-						placeholder="Email"
-						name="email"
-						value={data.email}
-						onChange={onChange}
+						inputProps={{
+							placeholder: "Email ID*",
+						}}
 					/>
 				</div>
 				<div className="form-input">
 					<p className="input-title">
 						Password <sup>*</sup>
 					</p>
-					<input
-						type="text"
-						placeholder="Password"
-						name="password"
-						value={data.password}
-						onChange={onChange}
+					<RequiredField
+						name={dataLabel("password")}
+						type="password"
+						inputProps={{
+							placeholder: "Password*",
+						}}
 					/>
 				</div>
 				<div className="form-input phone">
 					<p className="input-title">
 						Phone Number <sup>*</sup>
 					</p>
-					<input
+					<RequiredField
+						name={dataLabel("phone")}
 						type="tel"
-						placeholder="phone number"
-						name="phone"
-						pattern="[0-9]{10}"
-						value={data.phone}
-						onChange={onChange}
+						inputProps={{
+							placeholder: "Phone*",
+						}}
 					/>
 				</div>
-				<FileUpload file={data.resume} handleFileChange={onChange} />
+				<FileUpload
+					file={_.get(values, dataLabel("resume"))}
+					handleFileChange={onChange}
+				/>
 
 				<div className="form-input">
 					<p className="input-title">Enter portfolio URL (if any)</p>
-					<input
+					<Field
 						type="text"
+						name={dataLabel("portfolioURL")}
 						placeholder="URL"
-						name="portfolioURL"
-						value={data.portfolioURL}
-						onChange={onChange}
 					/>
 				</div>
 
@@ -132,42 +111,37 @@ const PersonalInformation = (props) => {
 				</p>
 				{roles.map((role) => (
 					<div key={role.id} className="option-selection">
-						<input
+						<Field
+							name={dataLabel("preferredRoles")}
 							type="checkbox"
-							value={role.id}
-							checked={data.preferredRoles.includes(role.id)}
-							onChange={onChange}
+							value={`${role.id}`}
 						/>
 						<p>{role.name}</p>
 					</div>
 				))}
+				<ErrorMessage
+					component={CustomErrorMessage}
+					name={dataLabel("preferredRoles")}
+				/>
 				<div className="form-input phone">
 					<p className="input-title">
 						If You Are Registering Via A Referral, Please Mention
 						Full Name Of The Employee Who Referred You
 					</p>
-					<input
-						type="text"
-						value={data.referral}
-						onChange={onChange}
-					/>
+					<Field type="text" name={dataLabel("referral")} />
 				</div>
 
 				<div className="option-selection">
-					<input
-						type="checkbox"
-						checked={data.mailList}
-						name="mailList"
-						onChange={onChange}
-					/>
+					<Field type="checkbox" name={dataLabel("mailList")} />
+
 					<p>Send me job related updates via mail</p>
 				</div>
 			</section>
 			<section>
 				<div className="upload">
-					{data.profilePic ? (
+					{profilePic ? (
 						<img
-							src={URL.createObjectURL(data.profilePic)}
+							src={URL.createObjectURL(profilePic)}
 							alt=""
 							className="upload-preview"
 						/>
@@ -187,7 +161,7 @@ const PersonalInformation = (props) => {
 					/>
 				</div>
 			</section>
-		</form>
+		</Form>
 	);
 };
 
