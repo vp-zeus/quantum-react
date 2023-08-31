@@ -1,12 +1,23 @@
 import _ from "lodash";
 
-const deepSnakeCase = (o) => {
-	return _.mapKeys(o, (value, key) => {
-		if (_.isObject(value)) {
-			value = deepSnakeCase(value);
-		}
-		return _.snakeCase(key);
+const deepMapKeys = (obj, fn) => {
+	let newObj = {};
+
+	_.forOwn(obj, (value, key) => {
+		if (_.isPlainObject(value)) value = deepMapKeys(value, fn);
+
+		newObj[fn(value, key)] = value;
 	});
+
+	return newObj;
 };
 
-export { deepSnakeCase };
+const toSnakeCase = (obj) => {
+	return deepMapKeys(obj, (v, k) => _.snakeCase(k));
+};
+
+const toCamelCase = (obj) => {
+	return deepMapKeys(obj, (v, k) => _.camelCase(k));
+};
+
+export { deepMapKeys, toCamelCase, toSnakeCase };

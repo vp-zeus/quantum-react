@@ -63,6 +63,7 @@ const registerAPI = async (formData) => {
 			"content-type": "multipart/form-data",
 		},
 	});
+	return response;
 };
 
 const loginAPI = async (credentials) => {
