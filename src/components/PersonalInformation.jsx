@@ -96,6 +96,10 @@ const PersonalInformation = () => {
 					file={_.get(values, dataLabel("resume"))}
 					handleFileChange={onChange}
 				/>
+				<ErrorMessage
+					component={CustomErrorMessage}
+					name={dataLabel("resume")}
+				/>
 
 				<div className="form-input">
 					<p className="input-title">Enter portfolio URL (if any)</p>
@@ -152,6 +156,10 @@ const PersonalInformation = () => {
 						UPLOAD DISPLAY PICTURE
 					</p>
 					<small className="subText">Max. image size: 5 MB</small>
+					<ErrorMessage
+						component={CustomErrorMessage}
+						name={dataLabel("profilePic")}
+					/>
 					<input
 						type="file"
 						accept="image/png, image/jpeg"

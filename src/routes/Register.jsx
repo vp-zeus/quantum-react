@@ -8,7 +8,7 @@ import Qualifications from "src/components/Qualifications";
 import Review from "src/components/Review";
 import { useAuth } from "src/Providers/AuthProvider";
 import { useLoaderData } from "react-router-dom";
-import { Formik } from "formik";
+import { Formik, setNestedObjectValues } from "formik";
 import { registerSchema } from "src/utils/validators";
 
 const Register = () => {
@@ -49,25 +49,25 @@ const Register = () => {
 			profilePic: null,
 		},
 		qualifications: {
-			aggregatePercentage: "98",
-			yearOfPassing: "2023",
-			degree: "1",
-			stream: "1",
-			college: "1",
+			aggregatePercentage: "",
+			yearOfPassing: "",
+			degree: "",
+			stream: "",
+			college: "",
 			otherCollege: "",
 			collegeLocation: "",
-			applicantType: "Fresher",
+			applicantType: "FRESHER",
 			yearsOfExp: "",
 			currentCTC: "",
 			expectedCTC: "",
 			expertSkills: [],
-			familiarSkills: [2, 3],
-			otherExpertTechnologies: "",
-			otherFamiliarTechnologies: "",
-			onNoticePeriod: false,
+			familiarSkills: [],
+			otherExpertSkills: "",
+			otherFamiliarSkills: "",
+			onNoticePeriod: "no",
 			noticePeriodEnd: "",
 			noticePeriodDuration: "",
-			appliedRecently: false,
+			appliedRecently: "no",
 			pastRoleApplied: "",
 		},
 	};
@@ -116,9 +116,21 @@ const Register = () => {
 		}));
 	};
 
-	const handleFormSubmit = async () => {
-		const response = await register(formData);
+	const handleFormSubmit = async (values) => {
+		const response = await register(values);
 		console.log(response);
+	};
+
+	const handleNextStep = async (validateForm, setTouched) => {
+		const result = await validateForm();
+		const values = Object.keys(initialState);
+		if (values[activeStep] in result) {
+			setTouched(setNestedObjectValues(initialState, true));
+			return;
+		}
+
+		setTouched(setNestedObjectValues(initialState, false));
+		setActiveStep((prev) => prev + 1);
 	};
 
 	const totalSteps = steps.length;
@@ -131,63 +143,76 @@ const Register = () => {
 				...initialState,
 			}}
 			validationSchema={registerSchema}
+			onSubmit={handleFormSubmit}
 		>
-			<>
-				<header className="register-header">
-					<Link to="/login">
-						<MdOutlineArrowBack className="register-header--icon" />
-					</Link>
-					<h3 className="register-header--text">Create An Account</h3>
-					<div className="btn-group">
-						<button className="btn">CANCEL</button>
-						<button
-							className={`btn ${
-								activeStep < totalSteps - 1 && "btn-disabled"
-							} `}
-							onClick={handleFormSubmit}
-						>
-							CREATE
-						</button>
-					</div>
-				</header>
-				<main className="register-body">
-					<FormProgress steps={steps} activeStep={activeStep} />
-
-					{activeStep < totalSteps - 1 ? (
-						<ComponentToRender
-							data={formData[label]}
-							handleFormDataChange={(data) =>
-								handleFormDataChange(data, label)
-							}
-						/>
-					) : (
-						<Review setActiveStep={setActiveStep} data={formData} />
-					)}
-
-					<div className="btn-group register-actions">
-						{activeStep > 0 && (
+			{(props) => (
+				<>
+					<header className="register-header">
+						<Link to="/login">
+							<MdOutlineArrowBack className="register-header--icon" />
+						</Link>
+						<h3 className="register-header--text">
+							Create An Account
+						</h3>
+						<div className="btn-group">
+							<button className="btn">CANCEL</button>
 							<button
-								onClick={() =>
-									setActiveStep((prev) => prev - 1)
+								// className="btn"
+								className={`btn ${
+									activeStep < totalSteps - 1 &&
+									"btn-disabled"
 								}
-								className="btn"
+									`}
 							>
-								PREVIOUS
+								CREATE
 							</button>
-						)}
-						{activeStep < totalSteps - 1 && (
-							<button
-								onClick={() =>
-									setActiveStep((prev) => prev + 1)
+						</div>
+					</header>
+					<main className="register-body">
+						<FormProgress steps={steps} activeStep={activeStep} />
+
+						{activeStep < totalSteps - 1 ? (
+							<ComponentToRender
+								data={formData[label]}
+								handleFormDataChange={(data) =>
+									handleFormDataChange(data, label)
 								}
-								className="btn"
-							>
-								NEXT
-							</button>
+							/>
+						) : (
+							<Review
+								setActiveStep={setActiveStep}
+								data={formData}
+							/>
 						)}
-					</div>
-				</main>
-			</>
+
+						<div className="btn-group register-actions">
+							{activeStep > 0 && (
+								<button
+									onClick={() =>
+										setActiveStep((prev) => prev - 1)
+									}
+									className="btn"
+								>
+									PREVIOUS
+								</button>
+							)}
+							{activeStep < totalSteps - 1 && (
+								<button
+									onClick={() =>
+										handleNextStep(
+											props.validateForm,
+											props.setTouched
+										)
+									}
+									className="btn"
+								>
+									NEXT
+								</button>
+							)}
+						</div>
+					</main>
+				</>
+			)}
 		</Formik>
 	);
 };

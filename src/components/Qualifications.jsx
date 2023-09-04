@@ -1,86 +1,74 @@
 import DropDown from "./DropDown";
 import "src/assets/styles/qualifications.sass";
 import _ from "lodash";
-import { useLoaderData } from "react-router-dom";
-const Qualifications = (props) => {
-	const { skills, colleges, degrees, streams } = useLoaderData();
-	const { data, handleFormDataChange } = props;
-	const onChange = (event) => {
-		const { value, name } = event.target;
-		const modifiedData = { ...data };
+import { Form, useLoaderData } from "react-router-dom";
+import { ErrorMessage, Field, useFormikContext } from "formik";
+import RequiredField from "src/components/RequiredField";
+import CustomErrorMessage from "src/components/CustomFormError";
 
-		if (name === "expertSkills" || name === "familiarSkills") {
-			modifiedData[name] = _.xor(modifiedData[name], [parseInt(value)]);
-		} else {
-			modifiedData[name] = value;
-		}
-		handleFormDataChange(modifiedData);
-	};
+const Qualifications = () => {
+	const { skills, colleges, degrees, streams } = useLoaderData();
+	const { values } = useFormikContext();
+
+	const dataLabel = (field) => `qualifications.${field}`;
+	const applicantType = _.get(values, dataLabel("applicantType"));
+	const onNoticePeriod = _.get(values, dataLabel("onNoticePeriod"));
+	const appliedRecently = _.get(values, dataLabel("appliedRecently"));
 	return (
-		<section className="qualifications">
+		<Form className="qualifications">
 			<DropDown heading="Educational Qualifications" defaultOpen={true}>
 				<div className="form-input input-sm">
 					<p className="input-title">
 						Aggregate Percentage <sup>*</sup>
 					</p>
-					<input
+					<RequiredField
+						name={dataLabel("aggregatePercentage")}
 						type="text"
-						name="aggregatePercentage"
-						value={data.aggregatePercentage}
-						onChange={onChange}
+						inputProps={{
+							placeholder: "Percentage*",
+						}}
 					/>
 				</div>
 				<div className="form-input input-sm">
 					<p className="input-title">
 						Year of passing <sup>*</sup>
 					</p>
-					<select
-						name="yearOfPassing"
-						id=""
-						value={data.yearOfPassing}
-						onChange={onChange}
+					<RequiredField
+						name={dataLabel("yearOfPassing")}
+						as="select"
 					>
 						<option value=""></option>
 						<option value="2021">2021</option>
 						<option value="2022">2022</option>
 						<option value="2023">2023</option>
-					</select>
+					</RequiredField>
 				</div>
 				<div className="qualifications-grid">
 					<div className="form-input">
 						<p className="input-title">
 							Degree <sup>*</sup>
 						</p>
-						<select
-							name="degree"
-							value={data.degree}
-							onChange={onChange}
-						>
+						<RequiredField name={dataLabel("degree")} as="select">
 							<option value=""></option>
 							{degrees.map((degree) => (
 								<option key={degree.id} value={degree.id}>
 									{degree.name}
 								</option>
 							))}
-						</select>
+						</RequiredField>
 					</div>
 					<div className="form-input">
 						<p className="input-title">
 							Stream <sup>*</sup>
 						</p>
-						<select
-							name="stream"
-							value={data.stream}
-							onChange={onChange}
-							id=""
-						>
+						<RequiredField name={dataLabel("stream")} as="select">
 							<option value=""></option>
 							{streams.map((stream) => (
 								<option key={stream.id} value={stream.id}>
 									{stream.name}
 								</option>
 							))}
-						</select>
+						</RequiredField>
 					</div>
 				</div>
 				<div className="qualifications-grid">
@@ -88,41 +76,27 @@ const Qualifications = (props) => {
 						<p className="input-title">
 							College <sup>*</sup>
 						</p>
-						<select
-							name="college"
-							value={data.college}
-							onChange={onChange}
-						>
+						<RequiredField name={dataLabel("college")} as="select">
 							<option value=""></option>
 							{colleges.map((college) => (
 								<option key={college.id} value={college.id}>
 									{college.name}
 								</option>
 							))}
-						</select>
+						</RequiredField>
 					</div>
 					<div className="form-input">
 						<p className="input-title">
 							If others, please enter your college name
 						</p>
-						<input
-							type="text"
-							name="otherCollege"
-							value={data.otherCollege}
-							onChange={onChange}
-						/>
+						<Field type="text" name={dataLabel("otherCollege")} />
 					</div>
 				</div>
 				<div className="form-input input-sm">
 					<p className="input-title">
-						Where is your college located?* <sup>*</sup>
+						Where is your college located? <sup></sup>
 					</p>
-					<input
-						type="text"
-						name="collegeLocation"
-						value={data.collegeLocation}
-						onChange={onChange}
-					/>
+					<Field type="text" name={dataLabel("collegeLocation")} />
 				</div>
 			</DropDown>
 			<br />
@@ -133,61 +107,55 @@ const Qualifications = (props) => {
 					</p>
 					<div className="qualifications-applicant">
 						<div className="option-selection">
-							<input
+							<Field
 								type="radio"
-								name="applicantType"
-								onChange={onChange}
-								value="Fresher"
-								checked={data.applicantType === "Fresher"}
+								value="FRESHER"
+								name={dataLabel("applicantType")}
 							/>
 							<p className="text">Fresher</p>
 						</div>
 						<div className="option-selection">
-							<input
+							<Field
 								type="radio"
-								name="applicantType"
-								onChange={onChange}
-								value="Experienced"
-								checked={data.applicantType === "Experienced"}
+								value="EXPERIENCED"
+								name={dataLabel("applicantType")}
 							/>
 							<p className="text">Experienced</p>
 						</div>
 					</div>
+					<ErrorMessage
+						component={CustomErrorMessage}
+						name={dataLabel("applicantType")}
+					/>
 				</div>
 				<div className="card exp">
-					{data.applicantType === "Experienced" && (
+					{applicantType === "EXPERIENCED" && (
 						<>
 							<div className="form-input input-sm">
 								<p className="input-title">
 									Years of Experience <sup>*</sup>
 								</p>
-								<input
+								<RequiredField
 									type="text"
-									name="yearsOfExp"
-									value={data.yearsOfExp}
-									onChange={onChange}
+									name={dataLabel("yearsOfExp")}
 								/>
 							</div>
 							<div className="form-input input-sm">
 								<p className="input-title">
 									Current CTC<sup>*</sup> (In Rupees)
 								</p>
-								<input
+								<RequiredField
 									type="text"
-									name="currentCTC"
-									value={data.currentCTC}
-									onChange={onChange}
+									name={dataLabel("currentCTC")}
 								/>
 							</div>
 							<div className="form-input input-sm">
 								<p className="input-title">
 									Expected CTC<sup>*</sup> (In Rupees)
 								</p>
-								<input
+								<RequiredField
 									type="text"
-									name="expectedCTC"
-									value={data.expectedCTC}
-									onChange={onChange}
+									name={dataLabel("expectedCTC")}
 								/>
 							</div>
 							<p className="input-title">
@@ -199,14 +167,10 @@ const Qualifications = (props) => {
 									key={skill.id}
 									className="option-selection"
 								>
-									<input
+									<Field
 										type="checkbox"
-										name="expertSkills"
-										value={skill.id}
-										checked={data.expertSkills.includes(
-											skill.id
-										)}
-										onChange={onChange}
+										name={dataLabel("expertSkills")}
+										value={`${skill.id}`}
 									/>
 									<p>{skill.name}</p>
 								</div>
@@ -216,11 +180,9 @@ const Qualifications = (props) => {
 								<p className="input-title">
 									If others, please mention
 								</p>
-								<input
+								<RequiredField
 									type="text"
-									name="otherExpertiseTechnologies"
-									value={data.otherExpertiseTechnologies}
-									onChange={onChange}
+									name={dataLabel("otherExpertSkills")}
 								/>
 							</div>
 						</>
@@ -231,23 +193,21 @@ const Qualifications = (props) => {
 					</p>
 					{skills.map((skill) => (
 						<div key={skill.id} className="option-selection">
-							<input
+							<Field
 								type="checkbox"
-								name="familiarSkills"
-								value={skill.id}
-								checked={data.familiarSkills.includes(skill.id)}
-								onChange={onChange}
+								name={dataLabel("familiarSkills")}
+								value={`${skill.id}`}
 							/>
 							<p>{skill.name}</p>
 						</div>
 					))}
 					<div className="form-input input-sm">
-						<p className="input-title">If others, please mention</p>
-						<input
+						<p className="input-title">
+							If others, please mention*
+						</p>
+						<RequiredField
 							type="text"
-							name="otherFamiliarTechnologies"
-							value={data.otherFamiliarTechnologies}
-							onChange={onChange}
+							name={dataLabel("otherFamiliarSkills")}
 						/>
 					</div>
 					<p className="input-title">
@@ -255,70 +215,92 @@ const Qualifications = (props) => {
 					</p>
 					<div className="qualifications-applicant">
 						<div className="option-selection">
-							<input type="radio" name="notice-period" />
+							<Field
+								type="radio"
+								name={dataLabel("onNoticePeriod")}
+								value="yes"
+							/>
 							<p className="text">Yes</p>
 						</div>
 						<div className="option-selection">
-							<input type="radio" name="notice-period" />
+							<Field
+								type="radio"
+								name={dataLabel("onNoticePeriod")}
+								value="no"
+							/>
 							<p className="text">No</p>
 						</div>
 					</div>
-					<div className="qualifications-grid">
-						<div className="form-input">
-							<p className="input-title">
-								If Yes, when will your notice period end?
-								<sup>*</sup>
-							</p>
+					<ErrorMessage
+						component={CustomErrorMessage}
+						name={dataLabel("onNoticePeriod")}
+					/>
 
-							<input
-								type="date"
-								name="noticePeriodEnd"
-								value={data.noticePeriodEnd}
-								onChange={onChange}
-							/>
+					{onNoticePeriod === "yes" && (
+						<div className="qualifications-grid">
+							<div className="form-input">
+								<p className="input-title">
+									If Yes, when will your notice period end?
+									<sup>*</sup>
+								</p>
+								<RequiredField
+									type="date"
+									name={dataLabel("noticePeriodEnd")}
+								/>
+							</div>
+							<div className="form-input">
+								<p className="input-title">
+									How long is your notice period?* (Mention in
+									months) <sup>*</sup>
+								</p>
+								<RequiredField
+									type="text"
+									name={dataLabel("noticePeriodDuration")}
+								/>
+							</div>
 						</div>
-						<div className="form-input">
-							<p className="input-title">
-								How long is your notice period?* (Mention in
-								months) <sup>*</sup>
-							</p>
-							<input
-								type="text"
-								name="noticePeriodDuration"
-								value={data.noticePeriodDuration}
-								onChange={onChange}
-							/>
-						</div>
-					</div>
+					)}
 					<p className="input-title">
 						Have You Appeared For Any Test By Zeus in the past 12
 						months? <sup>*</sup>
 					</p>
 					<div className="qualifications-applicant">
 						<div className="option-selection">
-							<input type="radio" name="reappear" />
+							<Field
+								type="radio"
+								name={dataLabel("appliedRecently")}
+								value="yes"
+							/>
 							<p className="text">Yes</p>
 						</div>
 						<div className="option-selection">
-							<input type="radio" name="reappear" />
+							<Field
+								type="radio"
+								name={dataLabel("appliedRecently")}
+								value="no"
+							/>
 							<p className="text">No</p>
 						</div>
 					</div>
-					<div className="form-input">
-						<p className="input-title">
-							If Yes, which role did you apply for?
-							<sup>*</sup>
-						</p>
-						<input
-							type="text"
-							name="pastRoleApplied"
-							value={data.pastRoleApplied}
-							onChange={onChange}
-						/>
-					</div>
+					<ErrorMessage
+						component={CustomErrorMessage}
+						name={dataLabel("appliedRecently")}
+					/>
+					{appliedRecently === "yes" && (
+						<div className="form-input">
+							<p className="input-title">
+								If Yes, which role did you apply for?
+								<sup>*</sup>
+							</p>
+							<RequiredField
+								type="text"
+								name={dataLabel("pastRoleApplied")}
+							/>
+						</div>
+					)}
 				</div>
 			</DropDown>
-		</section>
+		</Form>
 	);
 };
 

@@ -2,10 +2,12 @@ import _ from "lodash";
 import { FaPen } from "react-icons/fa";
 import "src/assets/styles/review.sass";
 import { useLoaderData } from "react-router-dom";
+import { useFormik } from "formik";
 
 const Review = (props) => {
 	const { setActiveStep } = props;
-	const { personalInformation, qualifications } = props.data;
+	const { values } = useFormik();
+	const { personalInformation, qualifications } = values;
 	const { roles, degrees, skills, streams, colleges } = useLoaderData();
 	const {
 		firstName,
